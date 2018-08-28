@@ -4,19 +4,65 @@ output:
   html_document:
     keep_md: true
 ---
+Coursera: Course 5 - Project 1
+==============================
+**Author: Sharon Puddle**  
 
+## Activity Monitoring Data
+
+Data from a personal activity monitoring device has been collected over a two month period from an anonyous individual during the months of October and November 2012. It includes the number of steps taken in 5 minute intervals each day.
+
+**Dataset:** [Activity monitoring data](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip) [52k]
+
+### Variables
+- **steps:** Number of steps taking in a 5-minute interval (missing values are coded as NA
+- **date:** The date on which the measurement was taken in YYYY-MM-DD format
+- **interval:** Identifier for the 5-minute interval in which measurement was taken  
 
 ## Loading and preprocessing the data
+```{r setup, include=TRUE, echo=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
 
+df <- read.csv("./data/activity.csv")
+df <- tbl_df(df)
 
+df_date <- df %>% filter(!is.na(steps)) %>% group_by(date) %>%
+            summarize(total.steps = sum(steps),                       mean.steps = mean(steps))
+
+df_int <- df %>% filter(!is.na(steps)) %>% group_by(interval) %>%
+            summarize(total.steps = sum(steps), mean.steps=mean(steps))
+```
 
 ## What is mean total number of steps taken per day?
+```{r hist_total, echo=TRUE}
+mean_steps <- as.integer(mean(df_date$total.steps))
+median_steps <- median(df_date$total.steps)
 
-
+ggplot(df_date, aes(x=total.steps)) + 
+  geom_histogram(bins=12, colour="blue", fill="white") + 
+  geom_vline(aes(xintercept=mean(total.steps, na.rm=T)), color="red", linetype="dashed", size=1) + 
+  xlab("Total Steps") + ylab("Days") + 
+  ggtitle("Total Steps Taken Each Day")
+```
+  
+The mean and median total number of steps taken each day are:  
+**Mean = `r mean_steps`**  
+**Median = `r median_steps`**
 
 ## What is the average daily activity pattern?
+```{r daily_pattern, echo=TRUE}
+max_int <- df_int[which.max(df_int$mean.steps),1]
 
-
+ggplot(data=df_int, aes(x=interval, y=mean.steps)) + 
+  geom_line(colour="blue") + geom_point(colour="blue") +
+  scale_x_continuous(breaks=seq(0,2400,200)) +
+  xlab("5-Minute Intervals") + ylab("Average Steps") +
+  ggtitle("Average Daily Activity Pattern")
+```
+  
+The 5-minute interval which contains the maximum number of average steps is **`r max_int`**   
 
 ## Imputing missing values
 
