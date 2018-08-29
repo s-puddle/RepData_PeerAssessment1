@@ -31,7 +31,7 @@ df <- read.csv("./data/activity.csv")
 df <- tbl_df(df)
 
 df_date <- df %>% filter(!is.na(steps)) %>% group_by(date) %>%
-            summarize(total.steps = sum(steps),                       mean.steps = mean(steps))
+            summarize(total.steps = sum(steps), mean.steps = mean(steps))
 
 df_int <- df %>% filter(!is.na(steps)) %>% group_by(interval) %>%
             summarize(total.steps = sum(steps), mean.steps=mean(steps))
