@@ -18,7 +18,9 @@ Data from a personal activity monitoring device has been collected over a two mo
 - **steps:** Number of steps taking in a 5-minute interval (missing values are coded as NA
 - **date:** The date on which the measurement was taken in YYYY-MM-DD format
 - **interval:** Identifier for the 5-minute interval in which measurement was taken  
-
+  
+---
+  
 ## Loading and preprocessing the data
 ```{r setup, include=TRUE, echo=TRUE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -34,14 +36,16 @@ df_date <- df %>% filter(!is.na(steps)) %>% group_by(date) %>%
 df_int <- df %>% filter(!is.na(steps)) %>% group_by(interval) %>%
             summarize(total.steps = sum(steps), mean.steps=mean(steps))
 ```
-
+  
+---
+  
 ## What is mean total number of steps taken per day?
 ```{r hist_total, echo=TRUE}
 mean_steps <- as.integer(mean(df_date$total.steps))
 median_steps <- median(df_date$total.steps)
 
 ggplot(df_date, aes(x=total.steps)) + 
-  geom_histogram(bins=12, colour="blue", fill="white") + 
+  geom_histogram(bins=22, colour="blue", fill="white") + 
   geom_vline(aes(xintercept=mean(total.steps, na.rm=T)), color="red", linetype="dashed", size=1) + 
   xlab("Total Steps") + ylab("Days") + 
   ggtitle("Total Steps Taken Each Day")
@@ -49,8 +53,10 @@ ggplot(df_date, aes(x=total.steps)) +
   
 The mean and median total number of steps taken each day are:  
 **Mean = `r mean_steps`**  
-**Median = `r median_steps`**
-
+**Median = `r median_steps`**  
+  
+---
+  
 ## What is the average daily activity pattern?
 ```{r daily_pattern, echo=TRUE}
 max_int <- df_int[which.max(df_int$mean.steps),1]
@@ -63,9 +69,48 @@ ggplot(data=df_int, aes(x=interval, y=mean.steps)) +
 ```
   
 The 5-minute interval which contains the maximum number of average steps is **`r max_int`**   
-
+  
+---
+  
 ## Imputing missing values
 
+``` {r total_na, echo=TRUE}
+total_na <- sum(is.na(df$steps)==TRUE)
 
+df2 <- df 
+k <- 0
+for (j in 1:61) {
+  for (i in 1:288) {
+    if (is.na(df2[i+k,1])==TRUE) { df2[i+k,1] <- df_int[i,3] }
+  }
+  k <- k + 288
+}
 
+df2_date <- df2 %>% group_by(date) %>%
+            summarize(total.steps = sum(steps),                       mean.steps = mean(steps))
+```
+Total missing values: **`r total_na`**  
+
+Create a new data set where missing values for steps will be replaced with the mean for that 5-minute interval from original data set  
+
+```{r hist_total_df2, echo=TRUE}
+mean2_steps <- as.integer(mean(df2_date$total.steps))
+median2_steps <- as.integer(median(df2_date$total.steps))
+
+ggplot(df2_date, aes(x=total.steps)) + 
+  geom_histogram(bins=22, colour="blue", fill="white") + 
+  geom_vline(aes(xintercept=mean(total.steps, na.rm=T)), color="red", linetype="dashed", size=1) + 
+  xlab("Total Steps") + ylab("Days") + 
+  ggtitle("Total Steps Taken Each Day (with no NA)")
+```
+  
+The mean and median total number of steps taken each day (with NA replaced with mean for each interval) are:  
+**Mean = `r mean2_steps`**  
+**Median = `r median2_steps`**  
+
+### Observations from Imputing Missing Values
+By replacing missing values for steps with the mean for that 5-minute interval, this has increased number of days with total steps equal to the mean number of steps per day.  
+  
+---
+  
 ## Are there differences in activity patterns between weekdays and weekends?
