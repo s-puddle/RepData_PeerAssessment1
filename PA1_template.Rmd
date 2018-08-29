@@ -87,11 +87,11 @@ for (j in 1:61) {
 }
 
 df2_date <- df2 %>% group_by(date) %>%
-            summarize(total.steps = sum(steps),                       mean.steps = mean(steps))
+            summarize(total.steps = sum(steps), mean.steps = mean(steps))
 ```
 Total missing values: **`r total_na`**  
 
-Create a new data set where missing values for steps will be replaced with the mean for that 5-minute interval from original data set  
+Create a new data set where missing values for steps will be replaced with the mean for that 5-minute interval from original data set.  
 
 ```{r hist_total_df2, echo=TRUE}
 mean2_steps <- as.integer(mean(df2_date$total.steps))
@@ -109,7 +109,7 @@ The mean and median total number of steps taken each day (with NA replaced with 
 **Median = `r median2_steps`**  
 
 ### Observations from Imputing Missing Values
-By replacing missing values for steps with the mean for that 5-minute interval, this has increased number of days with total steps equal to the mean number of steps per day.  
+By replacing missing values for steps with the mean for that 5-minute interval, this has increased the number of days with total steps equal to mean steps per day.  
   
 ---
   
