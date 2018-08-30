@@ -181,4 +181,4 @@ ggplot(data=df_days_int, aes(x=interval, y=mean.steps)) +
 ![](PA1_template_files/figure-html/Daily_Patterns_Comp-1.png)<!-- -->
 
 ### Observations of Average Daily Activity Pattern
-There is a bigger peak in average steps between 0800 and 0930 on weekdays that weekends. Average steps also increase earlier (0530) on weekdays than on weekends (0700). Average steps appear to be more evenly spread between 0800 and 1800 on weekends.  
+There is a bigger peak in average steps between 0800 and 0930 on weekdays that weekends. Average steps also increase earlier (0530) on weekdays than on weekends (0700). Average steps appear to be more evenly spread between 0800 and 1800 on weekends.
