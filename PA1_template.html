@@ -152,7 +152,7 @@ library(dplyr)</code></pre>
 ##     intersect, setdiff, setequal, union</code></pre>
 <pre class="r"><code>library(ggplot2)
 
-df &lt;- read.csv(&quot;./data/activity.csv&quot;)
+df &lt;- read.csv(&quot;~/R/Coursera/Course 5/data/activity.csv&quot;)
 df &lt;- tbl_df(df)
 
 df_date &lt;- df %&gt;% filter(!is.na(steps)) %&gt;% group_by(date) %&gt;%
