@@ -113,4 +113,32 @@ By replacing missing values for steps with the mean for that 5-minute interval, 
   
 ---
   
-## Are there differences in activity patterns between weekdays and weekends?
+## Are there Differences in Activity Patterns between Weekdays and Weekends?
+
+``` {r Days, echo=TRUE}
+df_days <- df2 %>% 
+            mutate(day = weekdays(as.Date(df$date)))
+
+for (i in 1:length(df_days$day)) {
+  if (df_days$day[i] == "Saturday" | df_days$day[i] == "Sunday") {
+    df_days$wday[i] <- "weekend" 
+  } else { 
+    df_days$wday[i] <- "weekday"
+  }
+}
+
+df_days_int <- df_days %>%
+            group_by(wday, interval) %>%
+            summarize(total.steps = sum(steps), mean.steps=mean(steps))
+
+ggplot(data=df_days_int, aes(x=interval, y=mean.steps)) + 
+  facet_grid(wday ~.) +
+  geom_line(colour="blue") + 
+  scale_x_continuous(breaks=seq(0,2400,200)) +
+  xlab("5-Minute Intervals") + ylab("Average Steps") +
+  ggtitle("Average Daily Activity Pattern")
+
+```
+  
+### Observations of Average Daily Activity Pattern
+There is a bigger peak in average steps between 0800 and 0930 on weekdays that weekends. Average steps also increase earlier (0530) on weekdays than on weekends (0700). Average steps appear to be more evenly spread between 0800 and 1800 on weekends.
